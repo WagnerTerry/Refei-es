@@ -13,6 +13,7 @@ class MyApp extends StatelessWidget {
       title: 'Vamos Cozinhar',
       theme: ThemeData(primarySwatch: Colors.blue),
       home: MyHomePage(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
