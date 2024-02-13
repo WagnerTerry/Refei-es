@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:meals/models/meal.dart';
+import '../models/meal.dart';
 
 class MealDetailScreen extends StatelessWidget {
   final Function(Meal) onToggleFavorite;
   final bool Function(Meal) isFavorite;
-  const MealDetailScreen(this.isFavorite, this.onToggleFavorite, {super.key});
+
+  const MealDetailScreen(this.onToggleFavorite, this.isFavorite, {Key? key})
+      : super(key: key);
 
   Widget _createSectionTitle(BuildContext context, String title) {
     return Container(
@@ -23,9 +25,10 @@ class MealDetailScreen extends StatelessWidget {
       padding: const EdgeInsets.all(10),
       margin: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(color: Colors.grey),
-          borderRadius: BorderRadius.circular(10)),
+        color: Colors.white,
+        border: Border.all(color: Colors.grey),
+        borderRadius: BorderRadius.circular(10),
+      ),
       child: child,
     );
   }
@@ -51,24 +54,51 @@ class MealDetailScreen extends StatelessWidget {
             ),
             _createSectionTitle(context, 'Ingredientes'),
             _createSectionContainer(
-                ListView.builder(
-                  itemCount: meal.ingredients.length,
-                  itemBuilder: (ctx, index) {
-                    return Card(
-                      color: Theme.of(context).colorScheme.secondary,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 5,
-                          horizontal: 10,
-                        ),
-                        child: Text(meal.ingredients[index]),
+              ListView.builder(
+                itemCount: meal.ingredients.length,
+                itemBuilder: (ctx, index) {
+                  return Card(
+                    color: Theme.of(context).colorScheme.secondary,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 5,
+                        horizontal: 10,
                       ),
-                    );
-                  },
-                ),
-              
+                      child: Text(meal.ingredients[index]),
+                    ),
+                  );
+                },
+              ),
+            ),
+            _createSectionTitle(context, 'Passos'),
+            _createSectionContainer(ListView.builder(
+              itemCount: meal.steps.length,
+              itemBuilder: (ctx, index) {
+                return Column(
+                  children: [
+                    ListTile(
+                      leading: CircleAvatar(
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        child: Text(
+                          '${index + 1}',
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      title: Text(meal.steps[index]),
+                    ),
+                    const Divider(),
+                  ],
+                );
+              },
+            )),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(isFavorite(meal) ? Icons.star : Icons.star_border),
+        onPressed: () {
+          onToggleFavorite(meal);
+        },
       ),
     );
   }
